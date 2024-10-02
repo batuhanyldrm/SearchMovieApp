@@ -1,39 +1,14 @@
-import {Dimensions, FlatList, Image, ScrollView, StyleSheet, Text, TextInput, TouchableHighlight, View} from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import * as Icons from "react-native-heroicons/outline";
+import {Dimensions, FlatList, Image, StyleSheet, Text, TouchableHighlight, View} from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { useEffect, useState } from 'react';
-import axios from "axios";
-  
-  
 
-export default function Main(props) {
+export default function Movies(props) {
 
-  const [search, setSearch] = useState([]);
   const navigation = useNavigation();
-
-  const getMovies = async () => {
-    const resp = await axios.get("https://movie-database-alternative.p.rapidapi.com/?s=Avengers&r=json&page=1",/* %20Endgame */
-      {
-        headers: {
-          'x-rapidapi-key': '53f668ccacmsh5988c24aeb8d2ffp1e1076jsn880a7e7cbb42',
-          'x-rapidapi-host': 'movie-database-alternative.p.rapidapi.com'
-        }
-      }
-    )
-    
-    setSearch(resp.data.Search)
-    return search;
-  }
-
-  useEffect(() => {
-    getMovies();
-  }, []);
   
   return (
     <View style={styles.container}>
       <FlatList
-        data={search}
+        data={props.movies}
         numColumns={2}
         keyExtractor={item => item.imdbID}
         renderItem={({ item }) => (

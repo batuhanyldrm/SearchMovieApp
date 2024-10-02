@@ -1,4 +1,4 @@
-import { ActivityIndicator, Dimensions, FlatList, Image, ScrollView, StatusBar, StyleSheet, Text, TextInput, TouchableHighlight, View } from 'react-native';
+import { ActivityIndicator, Dimensions, Image, ScrollView, StatusBar, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import * as Icons from "react-native-heroicons/outline";
 import { useEffect, useState } from 'react';
@@ -19,7 +19,11 @@ export default function MovieDetail({ route }) {
       });
       setMovieInfo(resp.data);
     } catch (error) {
-      console.error(error);
+      if (error.response && error.response.status === 524) {
+        console.error('Bağlantı Hatası: Lütfen internet bağlantınızı kontrol ediniz.');
+      } else {
+        console.error(error);
+      }
     } finally {
       setLoading(false);
     }
@@ -41,8 +45,14 @@ export default function MovieDetail({ route }) {
         <View style={styles.container}>
           <Text style={{ color: '#000000', fontSize: 18, fontWeight: '600', textAlign: 'center' }}>{route.params.title}</Text>
           <ScrollView contentContainerStyle={styles.scrollContainer}>
+            <View>
             <Image source={movieInfo.Poster !== 'N/A' ? { uri: movieInfo.Poster } : require('../assets/camera.jpg')} style={styles.image} />
-            <Text style={styles.textDecoration}>Year: {movieInfo.Year}</Text>          
+            </View>
+            <View style={styles.textContainer}>
+              <Text style={styles.textDecoration}><Icons.CalendarIcon color="#000000" fill="#999999" size={15} /> Year: {movieInfo.Year}</Text>
+              <Text style={styles.textDecoration}><Icons.StarIcon color="#000000" fill="#999999" size={15} /> Rating: {movieInfo.imdbRating}</Text>
+              <Text style={styles.textDecoration}><Icons.BookmarkIcon color="#000000" fill="#999999" size={15} /> Votes: {movieInfo.imdbVotes}</Text>
+            </View>          
           </ScrollView>
         </View>
       </SafeAreaView>
@@ -60,14 +70,20 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingVertical: 20,
   },
+  textContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingHorizontal: 20,
+    width: Dimensions.get('window').width,
+  },
   textDecoration: {
-    textAlign: 'left',
     color: '#000000',
     fontSize: 15,
     fontWeight: '600'
   },
   image: {
     borderRadius: 10,
+    margin: 10,
     height: Dimensions.get('window').height / 4,
     resizeMode: 'cover',
     width: Dimensions.get('window').width / 2.2,

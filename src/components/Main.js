@@ -1,7 +1,8 @@
 import {Dimensions, StyleSheet, Text, TextInput, TouchableHighlight, View} from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import * as Icons from "react-native-heroicons/outline";
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import axios from "axios";
 
 import Movies from "./Movies";
   
@@ -9,7 +10,32 @@ import Movies from "./Movies";
 
 export default function Main() {
 
-  const [search, setSearch] = useState("");
+  const [search, setSearch] = useState('Avengers%20Endgame');
+  const [movies, setMovies] = useState([]);
+
+  const getMovies = async () => {
+    const resp = await axios.get(`https://movie-database-alternative.p.rapidapi.com/?s=${search}&r=json&page=1`,/* %20Endgame */
+      {
+        headers: {
+          'x-rapidapi-key': '53f668ccacmsh5988c24aeb8d2ffp1e1076jsn880a7e7cbb42',
+          'x-rapidapi-host': 'movie-database-alternative.p.rapidapi.com'
+        }
+      }
+    )
+    
+    setMovies(resp.data.Search)
+    return movies;
+  };
+
+  useEffect(() => {
+    if (search) {
+      const intervalId = setInterval(() => {
+        getMovies();
+      }, 600);
+  
+      return () => clearInterval(intervalId);
+    }
+  }, [search]);
 
   return (
     <SafeAreaView style={{backgroundColor: '#FFFFFF', flex: 1}}>
@@ -19,10 +45,10 @@ export default function Main() {
           <TouchableHighlight onPress={() => console.log("modal yapılacak")} style={styles.iconButton} underlayColor="#40404040">
             <Icons.AdjustmentsHorizontalIcon color="#000000" fill="#000000" size={30} />
           </TouchableHighlight>
-          <TextInput onChangeText={setSearch} placeholder="Search movies" placeholderTextColor="#000000" style={styles.searchInput}  value={search} />
+          <TextInput onChangeText={(value) => setSearch(value)} placeholder="Search movies" placeholderTextColor="#000000" style={styles.searchInput}  value={search} />
         </View>
         <View style={{flex: 1}}>
-          <Movies />
+          <Movies movies={movies} />
         </View>
       </View>
     </SafeAreaView>
