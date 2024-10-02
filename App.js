@@ -11,9 +11,9 @@ export default function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator>
-        <Stack.Screen name="Movies" component={Main} />
+        <Stack.Screen name="Movies" options={{ headerShown: false }} component={Main} />
         <Stack.Screen name="Movie" component={Movies} />
-        <Stack.Screen name="MovieDetail" component={MovieDetail} />
+        <Stack.Screen name="Movie Detail" component={MovieDetail} />
       </Stack.Navigator>
     </NavigationContainer>
   )

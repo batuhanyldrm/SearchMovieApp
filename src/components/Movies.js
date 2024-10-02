@@ -9,11 +9,11 @@ import axios from "axios";
 
 export default function Main(props) {
 
-  const [search, setsearch] = useState([]);
+  const [search, setSearch] = useState([]);
   const navigation = useNavigation();
 
-  const getProducts = async () => {
-    const resp = await axios.get("https://movie-database-alternative.p.rapidapi.com/?s=Avengers%20Endgame&r=json&page=1",
+  const getMovies = async () => {
+    const resp = await axios.get("https://movie-database-alternative.p.rapidapi.com/?s=Avengers&r=json&page=1",/* %20Endgame */
       {
         headers: {
           'x-rapidapi-key': '53f668ccacmsh5988c24aeb8d2ffp1e1076jsn880a7e7cbb42',
@@ -22,23 +22,22 @@ export default function Main(props) {
       }
     )
     
-    setsearch(resp.data.Search)
+    setSearch(resp.data.Search)
     return search;
   }
 
   useEffect(() => {
-    getProducts();
+    getMovies();
   }, []);
   
   return (
-    <View>
-      <View style={styles.container}>
+    <View style={styles.container}>
       <FlatList
         data={search}
         numColumns={2}
         keyExtractor={item => item.imdbID}
         renderItem={({ item }) => (
-          <TouchableHighlight onPress={() => navigation.navigate('MovieDetail', {imdbID: item.imdbID})} style={styles.imageButton} underlayColor='#FFFFFF'>
+        <TouchableHighlight onPress={() => navigation.navigate('Movie Detail', {imdbID: item.imdbID, title: item.Title})} style={styles.imageButton} underlayColor='#FFFFFF'>
           <View>
             <Image source={item.Poster !== 'N/A' ? { uri: item.Poster } : require('../assets/camera.jpg')} style={styles.image} />
             <View style={styles.textView}>
@@ -48,13 +47,13 @@ export default function Main(props) {
         </TouchableHighlight>
         )}
       />
-      </View>
     </View>
   )
 }
 
 const styles = StyleSheet.create({
   container: {
+    flex: 1,
     flexDirection: 'row',
     justifyContent: 'space-between'
   },
@@ -65,6 +64,7 @@ const styles = StyleSheet.create({
   },
   title: {
     color: '#000000',
+    fontSize: 14,
     fontWeight: "bold",
     paddingHorizontal: 5,
     paddingVertical: 3
@@ -83,8 +83,6 @@ const styles = StyleSheet.create({
     width: Dimensions.get('window').width / 2.2
   },
   imageButton: {
-    borderColor: '#E0E0E0',
-    borderWidth: 1,
     height: Dimensions.get('window').height / 4,
     marginVertical: 20,
     marginHorizontal: 10,

@@ -9,19 +9,21 @@ import Movies from "./Movies";
 
 export default function Main() {
 
-  const [search, setsearch] = useState("");
-  
+  const [search, setSearch] = useState("");
 
   return (
-    <SafeAreaView>
-      <View style={styles.container}>
-        <TouchableHighlight onPress={() => console.log("modal yapılacak")} style={styles.iconButton} underlayColor="#40404040">
-          <Icons.AdjustmentsHorizontalIcon color="#000000" fill="#000000" size={30} />
-        </TouchableHighlight>
-        <TextInput onChangeText={setsearch} placeholder="Search movies" placeholderTextColor="#000000" style={styles.searchInput}  value={search} />
-      </View>
-      <View>
-        <Movies />
+    <SafeAreaView style={{backgroundColor: '#FFFFFF', flex: 1}}>
+      <View style={{flex: 1}}>
+        <Text style={{ color: '#000000', fontSize: 18, fontWeight: '600', textAlign: 'center' }}>Movies</Text>
+        <View style={styles.container}>
+          <TouchableHighlight onPress={() => console.log("modal yapılacak")} style={styles.iconButton} underlayColor="#40404040">
+            <Icons.AdjustmentsHorizontalIcon color="#000000" fill="#000000" size={30} />
+          </TouchableHighlight>
+          <TextInput onChangeText={setSearch} placeholder="Search movies" placeholderTextColor="#000000" style={styles.searchInput}  value={search} />
+        </View>
+        <View style={{flex: 1}}>
+          <Movies />
+        </View>
       </View>
     </SafeAreaView>
   )
