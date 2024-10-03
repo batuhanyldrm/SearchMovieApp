@@ -1,4 +1,4 @@
-import {ActivityIndicator, Dimensions, StyleSheet, Text, TextInput, TouchableHighlight, View} from 'react-native';
+import {ActivityIndicator, Alert, Dimensions, StyleSheet, Text, TextInput, TouchableHighlight, View} from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import * as Icons from "react-native-heroicons/outline";
 import { useEffect, useState } from 'react';
@@ -27,10 +27,13 @@ export default function Main() {
       )
       
       setMovies(resp.data.Search)
-      return movies;
+
+      if (resp.data.Response === "False") {
+        Alert.alert('Error', resp.data.Error, [{text: 'Tamam', onPress: () => {}}])
+      }
 
     } catch (error) {
-      console.error(error);
+      Alert.alert('Bağlantı Hatası', 'Lütfen internet bağlantınızı kontrol ediniz.', [{text: 'Tamam', onPress: () => {}}])
     } finally {
       setLoading(false);
     }

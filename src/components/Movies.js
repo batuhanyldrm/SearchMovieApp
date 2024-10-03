@@ -12,7 +12,7 @@ export default function Movies(props) {
         numColumns={2}
         keyExtractor={item => item.imdbID}
         renderItem={({ item }) => (
-        <TouchableHighlight onPress={() => navigation.navigate('Movie Detail', {imdbID: item.imdbID, title: item.Title})} style={styles.imageButton} underlayColor='#FFFFFF'>
+        <TouchableHighlight onPress={() => navigation.navigate('Movie Detail', {imdbID: item.imdbID})} style={styles.imageButton} underlayColor='#FFFFFF'>
           <View>
             <Image source={item.Poster !== 'N/A' ? { uri: item.Poster } : require('../assets/camera.jpg')} style={styles.image} />
             <View style={styles.textView}>

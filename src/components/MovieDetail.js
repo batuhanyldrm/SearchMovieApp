@@ -1,10 +1,12 @@
 import { ActivityIndicator, Alert, Dimensions, Image, ScrollView, StatusBar, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { useNavigation } from '@react-navigation/native';
 import * as Icons from "react-native-heroicons/outline";
 import { useEffect, useState } from 'react';
 import axios from "axios";
 
 export default function MovieDetail({ route }) {
+  const navigation = useNavigation();
   const [movieInfo, setMovieInfo] = useState({});
   const [loading, setLoading] = useState(true);
 
@@ -18,12 +20,13 @@ export default function MovieDetail({ route }) {
         }
       });
       setMovieInfo(resp.data);
-    } catch (error) {
-      if (error.response && error.response.status === 404) {
-        console.error(error);
-      } else {
-        Alert.alert('Bağlantı Hatası', 'Lütfen internet bağlantınızı kontrol ediniz.', [{text: 'Tamam', onPress: () => {}}])
+
+      if (resp.data.Response === "False") {
+        Alert.alert('Error', resp.data.Error, [{text: 'Tamam', onPress: () => navigation.navigate('Movies')}])
       }
+
+    } catch (error) {
+      Alert.alert('Bağlantı Hatası', 'Lütfen internet bağlantınızı kontrol ediniz.', [{text: 'Tamam', onPress: () => {}}])
     } finally {
       setLoading(false);
     }
@@ -43,7 +46,7 @@ export default function MovieDetail({ route }) {
       <SafeAreaView style={{flex: 1}}>
         <StatusBar barStyle={'light-content'} />
         <View style={styles.container}>
-          <Text style={{ color: '#000000', fontSize: 18, fontWeight: '600', textAlign: 'center' }}>{route.params.title}</Text>
+          <Text style={{ color: '#000000', fontSize: 18, fontWeight: '600', textAlign: 'center' }}>{movieInfo.Title}</Text>
           <ScrollView contentContainerStyle={styles.scrollContainer}>
             <View>
             <Image source={movieInfo.Poster !== 'N/A' ? { uri: movieInfo.Poster } : require('../assets/camera.jpg')} style={styles.image} />
