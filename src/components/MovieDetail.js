@@ -1,4 +1,4 @@
-import { ActivityIndicator, Dimensions, Image, ScrollView, StatusBar, StyleSheet, Text, View } from 'react-native';
+import { ActivityIndicator, Alert, Dimensions, Image, ScrollView, StatusBar, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import * as Icons from "react-native-heroicons/outline";
 import { useEffect, useState } from 'react';
@@ -19,10 +19,10 @@ export default function MovieDetail({ route }) {
       });
       setMovieInfo(resp.data);
     } catch (error) {
-      if (error.response && error.response.status === 524) {
-        console.error('Bağlantı Hatası: Lütfen internet bağlantınızı kontrol ediniz.');
-      } else {
+      if (error.response && error.response.status === 404) {
         console.error(error);
+      } else {
+        Alert.alert('Bağlantı Hatası', 'Lütfen internet bağlantınızı kontrol ediniz.', [{text: 'Tamam', onPress: () => {}}])
       }
     } finally {
       setLoading(false);

@@ -1,4 +1,4 @@
-import {Dimensions, StyleSheet, Text, TextInput, TouchableHighlight, View} from 'react-native';
+import {ActivityIndicator, Dimensions, StyleSheet, Text, TextInput, TouchableHighlight, View} from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import * as Icons from "react-native-heroicons/outline";
 import { useEffect, useState } from 'react';
@@ -12,32 +12,45 @@ export default function Main() {
 
   const [search, setSearch] = useState('Avengers%20Endgame');
   const [movies, setMovies] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   const getMovies = async () => {
-    const resp = await axios.get(`https://movie-database-alternative.p.rapidapi.com/?s=${search}&r=json&page=1`,/* %20Endgame */
-      {
-        headers: {
-          'x-rapidapi-key': '53f668ccacmsh5988c24aeb8d2ffp1e1076jsn880a7e7cbb42',
-          'x-rapidapi-host': 'movie-database-alternative.p.rapidapi.com'
+    setLoading(true);
+    try {
+      const resp = await axios.get(`https://movie-database-alternative.p.rapidapi.com/?s=${search}&r=json&page=1`,
+        {
+          headers: {
+            'x-rapidapi-key': '53f668ccacmsh5988c24aeb8d2ffp1e1076jsn880a7e7cbb42',
+            'x-rapidapi-host': 'movie-database-alternative.p.rapidapi.com'
+          }
         }
-      }
-    )
-    
-    setMovies(resp.data.Search)
-    return movies;
+      )
+      
+      setMovies(resp.data.Search)
+      return movies;
+
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   useEffect(() => {
-    if (search) {
-      const intervalId = setInterval(() => {
-        getMovies();
-      }, 600);
-  
-      return () => clearInterval(intervalId);
-    }
+    const searchResult = setTimeout(() => {
+      getMovies();
+    }, 1000);
+
+    return () => clearTimeout(searchResult);
   }, [search]);
 
   return (
+    loading ? 
+      <View style={{flex: 1, justifyContent: 'center'}}>
+        <ActivityIndicator color="#e04403" size="large" />
+        <Text style={{color: '#616161', fontSize: 18, textAlign: 'center'}}>Loading</Text>
+      </View>
+    :
     <SafeAreaView style={{backgroundColor: '#FFFFFF', flex: 1}}>
       <View style={{flex: 1}}>
         <Text style={{ color: '#000000', fontSize: 18, fontWeight: '600', textAlign: 'center' }}>Movies</Text>
