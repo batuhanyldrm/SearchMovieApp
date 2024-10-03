@@ -27,7 +27,6 @@ export default function Main() {
       )
       
       setMovies(resp.data.Search)
-
       if (resp.data.Response === "False") {
         Alert.alert('Error', resp.data.Error, [{text: 'Tamam', onPress: () => {}}])
       }
@@ -39,13 +38,13 @@ export default function Main() {
     }
   };
 
-  useEffect(() => {
-    const searchResult = setTimeout(() => {
-      getMovies();
-    }, 1000);
+  const handleSearchSubmit = () => {
+    getMovies();
+  };
 
-    return () => clearTimeout(searchResult);
-  }, [search]);
+  useEffect(() => {
+    getMovies();
+  }, []);
 
   return (
     loading ? 
@@ -61,7 +60,7 @@ export default function Main() {
           <TouchableHighlight onPress={() => console.log("modal yapılacak")} style={styles.iconButton} underlayColor="#40404040">
             <Icons.AdjustmentsHorizontalIcon color="#000000" fill="#000000" size={30} />
           </TouchableHighlight>
-          <TextInput onChangeText={(value) => setSearch(value)} placeholder="Search movies" placeholderTextColor="#000000" style={styles.searchInput}  value={search} />
+          <TextInput onChangeText={(value) => setSearch(value)} onSubmitEditing={handleSearchSubmit} placeholder="Search movies" placeholderTextColor="#000000" style={styles.searchInput}  value={search} />
         </View>
         <View style={{flex: 1}}>
           <Movies movies={movies} />
