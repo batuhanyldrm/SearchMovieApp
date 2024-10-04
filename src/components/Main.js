@@ -1,36 +1,40 @@
-import {ActivityIndicator, Alert, Dimensions, StyleSheet, Text, TextInput, TouchableHighlight, View} from 'react-native';
+import { ActivityIndicator, Alert, StyleSheet, Text, TextInput, TouchableHighlight, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import * as Icons from "react-native-heroicons/outline";
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import axios from "axios";
-
 import Movies from "./Movies";
   
   
-
 export default function Main() {
-
   const [search, setSearch] = useState('Avengers%20Endgame');
   const [movies, setMovies] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [page, setPage] = useState(1);
+  const [totalResults, setTotalResults] = useState(0);
+  const flatListRef = useRef();
 
-  const getMovies = async () => {
+  const getMovies = async (pageNumber = 1) => {
     setLoading(true);
     try {
-      const resp = await axios.get(`https://movie-database-alternative.p.rapidapi.com/?s=${search}&r=json&page=1`,
+      const resp = await axios.get(`https://movie-database-alternative.p.rapidapi.com/?s=${search}&r=json&page=${pageNumber}`,
         {
           headers: {
             'x-rapidapi-key': '53f668ccacmsh5988c24aeb8d2ffp1e1076jsn880a7e7cbb42',
             'x-rapidapi-host': 'movie-database-alternative.p.rapidapi.com'
           }
         }
-      )
-      
-      setMovies(resp.data.Search)
-      if (resp.data.Response === "False") {
-        Alert.alert('Error', resp.data.Error, [{text: 'Tamam', onPress: () => {}}])
-      }
+      );
 
+      if (resp.data.Response === "True") {
+
+        const allMovies = pageNumber === 1 ? resp.data.Search : [...movies, ...resp.data.Search];
+        setMovies(allMovies);
+        setTotalResults(parseInt(resp.data.totalResults, 10));
+
+      } else {
+        Alert.alert('Error', resp.data.Error, [{ text: 'Tamam', onPress: () => { } }]);
+      }
     } catch (error) {
       Alert.alert('Bağlantı Hatası', 'Lütfen internet bağlantınızı kontrol ediniz.', [{text: 'Tamam', onPress: () => {}}])
     } finally {
@@ -38,17 +42,29 @@ export default function Main() {
     }
   };
 
+  const loadNewPage = () => {
+    if (movies.length < totalResults && !loading) {
+      setPage(page => {
+        const nextPage = page + 1;
+        getMovies(nextPage);
+        return nextPage;
+      });
+    }
+  };
+
   const handleSearchSubmit = () => {
-    getMovies();
+    flatListRef.current.scrollToOffset({ animated: false, offset: 0 });
+    setPage(1);
+    getMovies(1);
   };
 
   useEffect(() => {
-    getMovies();
+    getMovies(1);
   }, []);
 
   return (
-    loading ? 
-      <View style={{flex: 1, justifyContent: 'center'}}>
+    loading && page === 1 ? 
+      <View style={{ flex: 1, justifyContent: 'center' }}>
         <ActivityIndicator color="#e04403" size="large" />
         <Text style={{color: '#616161', fontSize: 18, textAlign: 'center'}}>Loading</Text>
       </View>
@@ -63,7 +79,7 @@ export default function Main() {
           <TextInput onChangeText={(value) => setSearch(value)} onSubmitEditing={handleSearchSubmit} placeholder="Search movies" placeholderTextColor="#000000" style={styles.searchInput}  value={search} />
         </View>
         <View style={{flex: 1}}>
-          <Movies movies={movies} />
+          <Movies movies={movies} loadNewPage={loadNewPage} loading={loading} flatListRef={flatListRef} />
         </View>
       </View>
     </SafeAreaView>
@@ -81,10 +97,6 @@ const styles = StyleSheet.create({
     marginLeft: 5,
     padding: 5
   },
-  textColors: {
-    color: '#000000',
-    maxHeight: Dimensions.get('window').height / 2
-  },
   searchInput: {
     flex: 1,
     color: '#424242',
@@ -96,4 +108,4 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     margin: 5
   }
-})
+});

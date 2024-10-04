@@ -1,4 +1,4 @@
-import { ActivityIndicator, Alert, Dimensions, Image, ScrollView, StatusBar, StyleSheet, Text, View } from 'react-native';
+import { ActivityIndicator, Alert, Dimensions, Image, ImageBackground, ScrollView, StatusBar, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
 import * as Icons from "react-native-heroicons/outline";
@@ -44,20 +44,27 @@ export default function MovieDetail({ route }) {
       </View>
     :
       <SafeAreaView style={{flex: 1}}>
-        <StatusBar barStyle={'light-content'} />
-        <View style={styles.container}>
-          <Text style={{ color: '#000000', fontSize: 18, fontWeight: '600', textAlign: 'center' }}>{movieInfo.Title}</Text>
-          <ScrollView contentContainerStyle={styles.scrollContainer}>
-            <View>
-            <Image source={movieInfo.Poster !== 'N/A' ? { uri: movieInfo.Poster } : require('../assets/camera.jpg')} style={styles.image} />
-            </View>
-            <View style={styles.textContainer}>
-              <Text style={styles.textDecoration}><Icons.CalendarIcon color="#000000" fill="#999999" size={15} /> Year: {movieInfo.Year}</Text>
-              <Text style={styles.textDecoration}><Icons.StarIcon color="#000000" fill="#999999" size={15} /> Rating: {movieInfo.imdbRating}</Text>
-              <Text style={styles.textDecoration}><Icons.BookmarkIcon color="#000000" fill="#999999" size={15} /> Votes: {movieInfo.imdbVotes}</Text>
-            </View>          
-          </ScrollView>
-        </View>
+        {/* <ImageBackground source={movieInfo.Poster !== 'N/A' ? { uri: movieInfo.Poster } : require('../assets/camera.jpg')} imageStyle={{ opacity: 0.2 }} style={{ flex: 1 }}> */}
+          <StatusBar barStyle={'light-content'} />
+          <View style={styles.container}>
+            <Text style={{ color: '#000000', fontSize: 18, fontWeight: '600', textAlign: 'center' }}>{movieInfo.Title}</Text>
+            <ScrollView contentContainerStyle={styles.scrollContainer}>
+              <View>
+              <Image source={movieInfo.Poster !== 'N/A' ? { uri: movieInfo.Poster } : require('../assets/camera.jpg')} style={styles.image} />
+              </View>
+              <View style={styles.textContainer}>
+                <Text style={styles.textDecoration}><Icons.CalendarIcon color="#000000" fill="#999999" size={15} /> Year: {movieInfo.Released}</Text>
+                <Text style={styles.textDecoration}><Icons.StarIcon color="#000000" fill="#999999" size={15} /> Rating: {movieInfo.imdbRating}</Text>
+                <Text style={styles.textDecoration}><Icons.ClockIcon color="#000000" fill="#999999" size={15} /> Time: {movieInfo.Runtime}</Text>
+              </View>
+              <View>
+                <Text style={{margin: 10}}>Summary</Text>
+                <Text style={{margin: 10}}>{movieInfo.Plot}</Text>
+                <Text style={styles.textDecoration}>Gendre: {movieInfo.Genre}</Text>
+              </View>
+            </ScrollView>
+          </View>
+        {/* </ImageBackground> */}
       </SafeAreaView>
   );
 }
@@ -82,7 +89,7 @@ const styles = StyleSheet.create({
   textDecoration: {
     color: '#000000',
     fontSize: 15,
-    fontWeight: '600'
+    fontWeight: '600',
   },
   image: {
     borderRadius: 10,
