@@ -56,10 +56,8 @@ export default function MovieDetail({ route }) {
                 <Text style={styles.textDecoration}><Icons.CalendarIcon color="#000000" fill="#999999" size={15} /> Year: {movieInfo.Released}</Text>
                 <Text style={styles.textDecoration}><Icons.StarIcon color="#000000" fill="#999999" size={15} /> Rating: {movieInfo.imdbRating}</Text>
                 <Text style={styles.textDecoration}><Icons.ClockIcon color="#000000" fill="#999999" size={15} /> Time: {movieInfo.Runtime}</Text>
-              </View>
-              <View>
-                <Text style={{margin: 10}}>Summary</Text>
-                <Text style={{margin: 10}}>{movieInfo.Plot}</Text>
+                <Text style={styles.textDecoration}>Summary</Text>
+                <Text style={styles.textDecoration}>{movieInfo.Plot}</Text>
                 <Text style={styles.textDecoration}>Gendre: {movieInfo.Genre}</Text>
               </View>
             </ScrollView>
@@ -81,8 +79,8 @@ const styles = StyleSheet.create({
     paddingVertical: 20,
   },
   textContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+   /*  flexDirection: 'row',
+    justifyContent: 'space-between', */
     paddingHorizontal: 20,
     width: Dimensions.get('window').width,
   },

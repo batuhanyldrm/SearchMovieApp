@@ -1,9 +1,10 @@
-import { ActivityIndicator, Alert, StyleSheet, Text, TextInput, TouchableHighlight, View } from 'react-native';
+import { ActivityIndicator, Alert, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import * as Icons from "react-native-heroicons/outline";
 import { useEffect, useState, useRef } from 'react';
 import axios from "axios";
 import Movies from "./Movies";
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import SearchBar from './SearchBar';
   
   
 export default function Main() {
@@ -12,6 +13,7 @@ export default function Main() {
   const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(1);
   const [totalResults, setTotalResults] = useState(0);
+  
   const flatListRef = useRef();
 
   const getMovies = async (pageNumber = 1) => {
@@ -72,12 +74,7 @@ export default function Main() {
     <SafeAreaView style={{backgroundColor: '#FFFFFF', flex: 1}}>
       <View style={{flex: 1}}>
         <Text style={{ color: '#000000', fontSize: 18, fontWeight: '600', textAlign: 'center' }}>Movies</Text>
-        <View style={styles.container}>
-          <TouchableHighlight onPress={() => console.log("modal yapılacak")} style={styles.iconButton} underlayColor="#40404040">
-            <Icons.AdjustmentsHorizontalIcon color="#000000" fill="#000000" size={30} />
-          </TouchableHighlight>
-          <TextInput onChangeText={(value) => setSearch(value)} onSubmitEditing={handleSearchSubmit} placeholder="Search movies" placeholderTextColor="#000000" style={styles.searchInput}  value={search} />
-        </View>
+        <SearchBar search={search} setSearch={setSearch} handleSearchSubmit={handleSearchSubmit} />
         <View style={{flex: 1}}>
           <Movies movies={movies} loadNewPage={loadNewPage} loading={loading} flatListRef={flatListRef} />
         </View>
@@ -86,26 +83,4 @@ export default function Main() {
   )
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  iconButton: {
-    borderRadius: 20,
-    marginLeft: 5,
-    padding: 5
-  },
-  searchInput: {
-    flex: 1,
-    color: '#424242',
-    fontSize: 16,
-    paddingVertical: 5,
-    paddingHorizontal: 10,
-    borderColor: '#000000',
-    borderWidth: 1,
-    borderRadius: 8,
-    margin: 5
-  }
-});
+const styles = StyleSheet.create({});
