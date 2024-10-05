@@ -8,18 +8,25 @@ import SearchBar from './SearchBar';
   
   
 export default function Main() {
-  const [search, setSearch] = useState('Avengers%20Endgame');
+  const [search, setSearch] = useState('Avengers Endgame');
   const [movies, setMovies] = useState([]);
   const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(1);
   const [totalResults, setTotalResults] = useState(0);
+  const [types, setTypes] = useState([{type: 'all'}, {type: 'movie'}, {type: 'series'}, {type: 'game'}]);
+  const [selectedType, setSelectedType] = useState('');
+  const [years, setYears] = useState([]);
+  const [selectedYear, setSelectedYear] = useState('');
   
   const flatListRef = useRef();
+
+  const yearQuery = selectedYear === 'all' ? '' : selectedYear;
+  const typeQuery = selectedType === 'all' ? '' : selectedType;
 
   const getMovies = async (pageNumber = 1) => {
     setLoading(true);
     try {
-      const resp = await axios.get(`https://movie-database-alternative.p.rapidapi.com/?s=${search}&r=json&page=${pageNumber}`,
+      const resp = await axios.get(`https://movie-database-alternative.p.rapidapi.com/?s=${search}&r=json&page=${pageNumber}&y=${yearQuery}&type=${typeQuery}`,
         {
           headers: {
             'x-rapidapi-key': '53f668ccacmsh5988c24aeb8d2ffp1e1076jsn880a7e7cbb42',
@@ -60,7 +67,15 @@ export default function Main() {
     getMovies(1);
   };
 
+  const currentYear = new Date().getFullYear();
+  const yearArray = [{ year: 'all' }];
+
+  for (let years = 1900; years <= currentYear; years++) {
+    yearArray.push({ year: years.toString() });
+  }
+
   useEffect(() => {
+    setYears(yearArray);
     getMovies(1);
   }, []);
 
@@ -74,7 +89,7 @@ export default function Main() {
     <SafeAreaView style={{backgroundColor: '#FFFFFF', flex: 1}}>
       <View style={{flex: 1}}>
         <Text style={{ color: '#000000', fontSize: 18, fontWeight: '600', textAlign: 'center' }}>Movies</Text>
-        <SearchBar search={search} setSearch={setSearch} handleSearchSubmit={handleSearchSubmit} />
+        <SearchBar search={search} setSearch={setSearch} types={types} years={years} selectedYear={selectedYear} setSelectedYear={setSelectedYear} handleSearchSubmit={handleSearchSubmit}   selectedType={selectedType} setSelectedType={setSelectedType} />
         <View style={{flex: 1}}>
           <Movies movies={movies} loadNewPage={loadNewPage} loading={loading} flatListRef={flatListRef} />
         </View>

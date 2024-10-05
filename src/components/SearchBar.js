@@ -2,11 +2,20 @@ import { StyleSheet, View, TouchableHighlight, TextInput, Modal, Text, Touchable
 import { useNavigation } from '@react-navigation/native';
 import { useState } from 'react';
 import * as Icons from "react-native-heroicons/outline";
+import SelectDropdown from 'react-native-select-dropdown';
 
 export default function SearchBar(props) {
 	
   const navigation = useNavigation();
 	const [modalVisible, setModalVisible] = useState(false);
+
+  const handleSelectType = (selectedItem) => {
+    props.setSelectedType(selectedItem);
+  };
+
+  const handleSelectYear = (selectedItem) => {
+    props.setSelectedYear(selectedItem);
+  };
 
   return (
 		<View style={styles.container}>
@@ -15,7 +24,7 @@ export default function SearchBar(props) {
 			</TouchableHighlight>
 			<TextInput onChangeText={(value) => props.setSearch(value)} onSubmitEditing={props.handleSearchSubmit} placeholder="Search movies" placeholderTextColor="#000000" style={styles.searchInput}  value={props.search} />
 			<TouchableHighlight onPress={() => navigation.navigate('Favorite Movies')} style={styles.favoriteIconButton} underlayColor="#40404040">
-				<Icons.HeartIcon color="#000000" /* fill="#000000" */ size={30} />
+				<Icons.HeartIcon color="#000000" size={30} />
 			</TouchableHighlight>
 			<Modal
         transparent={true}
@@ -25,30 +34,54 @@ export default function SearchBar(props) {
         <View style={styles.modalContainer}>
           <View style={styles.modalContent}>
             <Text style={styles.modalText}>Filter</Text>
-            <View style={{
-              flexDirection: "row",
-              justifyContent: "space-between",
-              paddingHorizontal: 20,
-            }}>
-              <TouchableOpacity style={{
-                backgroundColor: '#9c9c9c',
-                padding: 10,
-                borderRadius: 5,
-                width: '45%',
-                justifyContent: 'center',
-                alignItems: 'center',
-              }} onPress={() => setModalVisible(false)}>
-                <Text style={styles.buttonText}>Hayır</Text>
+            <View style={styles.selectDropdown}>
+              <SelectDropdown
+                data={props.types.map(item => item.type)}
+                onSelect={handleSelectType}
+                defaultValue={props.selectedType}
+                renderButton={selectedItem => {
+                  return (
+                    <View><Text>{selectedItem}</Text></View>
+                  );
+                }}
+                renderItem={item => {
+                  return (
+                    <View><Text >{item.type}</Text></View>
+                  );
+                }}
+                showsVerticalScrollIndicator={false}
+                dropdownStyle={styles.dropdownMenuStyle}
+              />
+            </View>
+            <View style={styles.selectDropdown}>
+              <SelectDropdown
+                data={props.years.map(item => item.year)}
+                onSelect={handleSelectYear}
+                defaultValue={props.selectedYear}
+                renderButton={selectedItem => {
+                  return (
+                    <View>
+                      <Text>{selectedItem}</Text>
+                    </View>
+                  );
+                }}
+                renderItem={item => {
+                  return (
+                    <View>
+                      <Text>{item.year}</Text>
+                    </View>
+                  );
+                }}
+                showsVerticalScrollIndicator={false}
+                dropdownStyle={styles.dropdownMenuStyle}
+              />
+            </View>
+            <View style={styles.buttonRow}>
+              <TouchableOpacity style={styles.modalButton} onPress={() => setModalVisible(false)}>
+                <Text style={styles.buttonText}>Close</Text>
               </TouchableOpacity>
-              <TouchableOpacity style={{
-                backgroundColor: '#9c9c9c',
-                padding: 10,
-                borderRadius: 5,
-                width: '45%',
-                justifyContent: 'center',
-                alignItems: 'center',
-              }} onPress={() => {}}>
-                <Text style={styles.buttonText}>Evet</Text>
+              <TouchableOpacity style={styles.modalButton} onPress={() => props.handleSearchSubmit()}>
+                <Text style={styles.buttonText}>Filter</Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -71,6 +104,20 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     width: '80%',
   },
+  dropdownMenuStyle: {
+    backgroundColor: '#E9ECEF',
+    borderRadius: 8,
+  },
+  selectDropdown: {
+    alignItems: 'center',
+    marginVertical: 5
+  },
+  buttonRow: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    paddingHorizontal: 20,
+    marginTop: 20
+  },
   buttonText: {
     color: 'white',
     textAlign: 'center',
@@ -81,6 +128,14 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginBottom: 20,
     textAlign: 'center',
+  },
+  modalButton: {
+    backgroundColor: '#9c9c9c',
+    padding: 10,
+    borderRadius: 5,
+    width: '45%',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   container: {
     flexDirection: 'row',
@@ -107,5 +162,8 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 8,
     margin: 5
+  },
+  dropdownStyle: {
+    borderRadius: 8,
   }
 });
