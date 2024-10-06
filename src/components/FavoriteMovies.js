@@ -36,7 +36,7 @@ export default function FavoriteMovies() {
         <Text style={styles.loading}>Loading</Text>
       </View>
     :
-      <SafeAreaView style={styles.safeArea}>
+      <SafeAreaView style={styles.safeArea} edges={['bottom', 'left', 'right']}>
         <StatusBar barStyle={'light-content'} />
         <View style={styles.container}>
           {favoriteMovies.length > 0 ?
@@ -66,7 +66,6 @@ export default function FavoriteMovies() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: Platform.OS === 'ios' ? 0 : StatusBar.currentHeight,
     flexDirection: 'row',
     justifyContent: 'space-between'
   },
@@ -80,8 +79,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center'
   },
   safeArea: {
-    flex: 1,
-    marginTop: -50
+    flex: 1
   },
   title: {
     color: '#000000',

@@ -85,9 +85,8 @@ export default function Main() {
         <Text style={styles.loading}>Loading</Text>
       </View>
     :
-    <SafeAreaView style={styles.safeArea}>
+    <SafeAreaView style={styles.safeArea} edges={['bottom', 'left', 'right']}>
       <View style={styles.viewContainer}>
-        <Text style={styles.header}>Movies</Text>
         <SearchBar search={search} setSearch={setSearch} types={types} years={years} selectedYear={selectedYear} setSelectedYear={setSelectedYear} handleSearchSubmit={handleSearchSubmit}   selectedType={selectedType} setSelectedType={setSelectedType} />
         <View style={styles.viewContainer}>
           <Movies movies={movies} loadNewPage={loadNewPage} loading={loading} flatListRef={flatListRef} />
@@ -108,7 +107,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center'
   },
   safeArea: {
-    backgroundColor: '#FFFFFF',
     flex: 1
   },
   header: {

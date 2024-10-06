@@ -75,7 +75,7 @@ export default function MovieDetail({ route }) {
         <Text style={styles.loading}>Loading</Text>
       </View>
     :
-      <SafeAreaView style={styles.safeArea}>
+      <SafeAreaView style={styles.safeArea} edges={['bottom', 'left', 'right']}>
         <StatusBar barStyle={'light-content'} />
         <View style={styles.container}>
           <Text style={styles.title}>{movieInfo.Title}</Text>
@@ -83,7 +83,7 @@ export default function MovieDetail({ route }) {
             <View style={styles.imageContainer}>
               <Image source={movieInfo.Poster !== 'N/A' ? { uri: movieInfo.Poster } : require('../assets/camera.jpg')} style={styles.image} />
               <TouchableOpacity onPress={addToFavorite}>
-                <Icons.HeartIcon color={isFavorite ? "#6495ed" : "#000000"} fill={isFavorite ? "#87ceff" : "#e8e8e8"} size={30} />
+                <Icons.HeartIcon color={isFavorite ? "#ff4040" : "#000000"} fill={isFavorite ? "#ff4040" : "#e8e8e8"} size={30} />
               </TouchableOpacity>
             </View>
             <View style={styles.textContainer}>
@@ -126,7 +126,7 @@ export default function MovieDetail({ route }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: Platform.OS === 'ios' ? 0 : StatusBar.currentHeight,
+    paddingTop: 15,
     alignItems: 'center',
     justifyContent: 'center',
   },

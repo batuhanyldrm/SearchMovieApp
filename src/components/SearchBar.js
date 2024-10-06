@@ -39,6 +39,7 @@ export default function SearchBar(props) {
                 data={props.types.map(item => item.type)}
                 onSelect={handleSelectType}
                 defaultValue={props.selectedType}
+                defaultButtonText="Select Category"
                 renderButton={selectedItem => {
                   return (
                     <View><Text>{selectedItem}</Text></View>
@@ -58,6 +59,7 @@ export default function SearchBar(props) {
                 data={props.years.map(item => item.year)}
                 onSelect={handleSelectYear}
                 defaultValue={props.selectedYear}
+                defaultButtonText="Select Year"
                 renderButton={selectedItem => {
                   return (
                     <View>
