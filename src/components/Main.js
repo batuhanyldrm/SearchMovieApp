@@ -3,7 +3,6 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useEffect, useState, useRef } from 'react';
 import axios from "axios";
 import Movies from "./Movies";
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import SearchBar from './SearchBar';
   
   
@@ -45,7 +44,7 @@ export default function Main() {
         Alert.alert('Error', resp.data.Error, [{ text: 'Tamam', onPress: () => { } }]);
       }
     } catch (error) {
-      Alert.alert('Bağlantı Hatası', 'Lütfen internet bağlantınızı kontrol ediniz.', [{text: 'Tamam', onPress: () => {}}])
+      Alert.alert('Connection Error', 'Please check your internet connection.', [{text: 'Tamam', onPress: () => {}}])
     } finally {
       setLoading(false);
     }

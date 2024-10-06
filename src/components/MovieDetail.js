@@ -1,7 +1,8 @@
-import { ActivityIndicator, Alert, Dimensions, Image, ImageBackground, ScrollView, StatusBar, StyleSheet, Text, View } from 'react-native';
+import { ActivityIndicator, Alert, Dimensions, Image, ImageBackground, ScrollView, StatusBar, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
 import * as Icons from "react-native-heroicons/outline";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useEffect, useState } from 'react';
 import axios from "axios";
 
@@ -9,6 +10,7 @@ export default function MovieDetail({ route }) {
   const navigation = useNavigation();
   const [movieInfo, setMovieInfo] = useState({});
   const [loading, setLoading] = useState(true);
+  const [isFavorite, setIsFavorite] = useState(false);
 
   const getMovie = async () => {
     setLoading(true);
@@ -26,9 +28,39 @@ export default function MovieDetail({ route }) {
       }
 
     } catch (error) {
-      Alert.alert('Bağlantı Hatası', 'Lütfen internet bağlantınızı kontrol ediniz.', [{text: 'Tamam', onPress: () => {}}])
+      Alert.alert('Connection Error', 'Please check your internet connection.', [{text: 'Tamam', onPress: () => {}}])
     } finally {
       setLoading(false);
+      checkFavorite();
+    }
+  };
+
+  const checkFavorite = async () => {
+    try {
+      const favorites = await AsyncStorage.getItem('favorites');
+      const storageFavorites = favorites ? JSON.parse(favorites) : [];
+      const isFavoriteMovie = storageFavorites.some(favoriteMovie => favoriteMovie.imdbID === route.params.imdbID);
+      setIsFavorite(isFavoriteMovie);
+    } catch (error) {
+      console.error('Error: ', error);
+    }
+  };
+
+  const addToFavorite = async () => {
+    try {
+      const favorites = await AsyncStorage.getItem('favorites');
+      let storageFavorites = favorites ? JSON.parse(favorites) : [];
+
+      if (isFavorite) {
+        storageFavorites = storageFavorites.filter(favoriteMovie => favoriteMovie.imdbID !== movieInfo.imdbID);
+      } else {
+        storageFavorites.push(movieInfo);
+      }
+
+      await AsyncStorage.setItem('favorites', JSON.stringify(storageFavorites));
+      setIsFavorite(!isFavorite);
+    } catch (error) {
+      console.error('Error: ', error);
     }
   };
 
@@ -49,16 +81,19 @@ export default function MovieDetail({ route }) {
           <View style={styles.container}>
             <Text style={{ color: '#000000', fontSize: 18, fontWeight: '600', textAlign: 'center' }}>{movieInfo.Title}</Text>
             <ScrollView contentContainerStyle={styles.scrollContainer}>
-              <View>
-              <Image source={movieInfo.Poster !== 'N/A' ? { uri: movieInfo.Poster } : require('../assets/camera.jpg')} style={styles.image} />
+              <View style={{ alignItems: 'center' }}>
+                <Image source={movieInfo.Poster !== 'N/A' ? { uri: movieInfo.Poster } : require('../assets/camera.jpg')} style={styles.image} />
+                <TouchableOpacity onPress={addToFavorite}>
+                  <Icons.HeartIcon color={isFavorite ? "#6495ed" : "#000000"} fill={isFavorite ? "#87ceff" : "#e8e8e8"} size={30} />
+                </TouchableOpacity>
               </View>
               <View style={styles.textContainer}>
-                <Text style={styles.textDecoration}><Icons.CalendarIcon color="#000000" fill="#999999" size={15} /> Year: {movieInfo.Released}</Text>
-                <Text style={styles.textDecoration}><Icons.StarIcon color="#000000" fill="#999999" size={15} /> Rating: {movieInfo.imdbRating}</Text>
-                <Text style={styles.textDecoration}><Icons.ClockIcon color="#000000" fill="#999999" size={15} /> Time: {movieInfo.Runtime}</Text>
+                <Text style={styles.textDecoration}><Icons.CalendarIcon color="#000000" fill="#999999" size={15} /> Year: {movieInfo.Released !== 'N/A' ? movieInfo.Released : '-'}</Text>
+                <Text style={styles.textDecoration}><Icons.StarIcon color="#000000" fill="#999999" size={15} /> Rating: {movieInfo.imdbRating !== 'N/A' ? movieInfo.imdbRating : '-'}</Text>
+                <Text style={styles.textDecoration}><Icons.ClockIcon color="#000000" fill="#999999" size={15} /> Time: {movieInfo.Runtime !== 'N/A' ? movieInfo.Runtime : '-'}</Text>
                 <Text style={styles.textDecoration}>Summary</Text>
-                <Text style={styles.textDecoration}>{movieInfo.Plot}</Text>
-                <Text style={styles.textDecoration}>Gendre: {movieInfo.Genre}</Text>
+                <Text style={styles.textDecoration}>{movieInfo.Plot !== 'N/A' ? movieInfo.Plot : '-'}</Text>
+                <Text style={styles.textDecoration}>Gendre: {movieInfo.Genre !== 'N/A' ? movieInfo.Genre : '-'}</Text>
               </View>
             </ScrollView>
           </View>
