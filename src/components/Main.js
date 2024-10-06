@@ -80,16 +80,16 @@ export default function Main() {
 
   return (
     loading && page === 1 ? 
-      <View style={{ flex: 1, justifyContent: 'center' }}>
-        <ActivityIndicator color="#e04403" size="large" />
-        <Text style={{color: '#616161', fontSize: 18, textAlign: 'center'}}>Loading</Text>
+      <View style={styles.loadingContainer}>
+        <ActivityIndicator color="#87ceff" size="large" />
+        <Text style={styles.loading}>Loading</Text>
       </View>
     :
-    <SafeAreaView style={{backgroundColor: '#FFFFFF', flex: 1}}>
-      <View style={{flex: 1}}>
-        <Text style={{ color: '#000000', fontSize: 18, fontWeight: '600', textAlign: 'center' }}>Movies</Text>
+    <SafeAreaView style={styles.safeArea}>
+      <View style={styles.viewContainer}>
+        <Text style={styles.header}>Movies</Text>
         <SearchBar search={search} setSearch={setSearch} types={types} years={years} selectedYear={selectedYear} setSelectedYear={setSelectedYear} handleSearchSubmit={handleSearchSubmit}   selectedType={selectedType} setSelectedType={setSelectedType} />
-        <View style={{flex: 1}}>
+        <View style={styles.viewContainer}>
           <Movies movies={movies} loadNewPage={loadNewPage} loading={loading} flatListRef={flatListRef} />
         </View>
       </View>
@@ -97,4 +97,27 @@ export default function Main() {
   )
 }
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  loading: {
+    color: '#616161',
+    fontSize: 18,
+    textAlign: 'center'
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center'
+  },
+  safeArea: {
+    backgroundColor: '#FFFFFF',
+    flex: 1
+  },
+  header: {
+    color: '#000000',
+    fontSize: 18,
+    fontWeight: '600',
+    textAlign: 'center'
+  },
+  viewContainer: {
+    flex: 1
+  }
+});

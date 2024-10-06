@@ -22,7 +22,7 @@ export default function Movies(props) {
         )}
         onEndReached={props.loadNewPage}
         onEndReachedThreshold={0.5}
-        ListFooterComponent={props.loading ? <ActivityIndicator color="#e04403" size="large" /> : null}
+        ListFooterComponent={props.loading ? <ActivityIndicator color="#87ceff" size="large" /> : null}
       />
     </View>
   );

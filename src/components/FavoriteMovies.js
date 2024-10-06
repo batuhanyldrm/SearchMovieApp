@@ -1,8 +1,8 @@
 import { ActivityIndicator, FlatList, StatusBar, StyleSheet, Text, View, Image, Dimensions, TouchableHighlight } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useNavigation } from '@react-navigation/native';
+import { useFocusEffect, useNavigation } from '@react-navigation/native';
 
 export default function FavoriteMovies() {
   const navigation = useNavigation();
@@ -23,18 +23,20 @@ export default function FavoriteMovies() {
     }
   };
 
-  useEffect(() => {
-    getFavoriteMovies();
-  }, []);
+  useFocusEffect(
+    useCallback(() => {
+      getFavoriteMovies();
+    }, [])
+  );
 
   return (
     loading ? 
-      <View style={{flex: 1, justifyContent: 'center'}}>
-        <ActivityIndicator color="#e04403" size="large" />
-        <Text style={{color: '#616161', fontSize: 18, textAlign: 'center'}}>Loading</Text>
+      <View style={styles.loadingContainer}>
+        <ActivityIndicator color="#87ceff" size="large" />
+        <Text style={styles.loading}>Loading</Text>
       </View>
     :
-      <SafeAreaView style={{flex: 1}}>
+      <SafeAreaView style={styles.safeArea}>
         <StatusBar barStyle={'light-content'} />
         <View style={styles.container}>
           {favoriteMovies.length > 0 ?
@@ -52,9 +54,6 @@ export default function FavoriteMovies() {
                 </View>
               </TouchableHighlight>
             )}
-            /* onEndReached={props.loadNewPage}
-            onEndReachedThreshold={0.5}
-            ListFooterComponent={props.loading ? <ActivityIndicator color="#e04403" size="large" /> : null} */
           />
           :
           <Text style={styles.textDecoration}>Favorite movie not found</Text>
@@ -67,8 +66,22 @@ export default function FavoriteMovies() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    paddingTop: Platform.OS === 'ios' ? 0 : StatusBar.currentHeight,
     flexDirection: 'row',
     justifyContent: 'space-between'
+  },
+  loading: {
+    color: '#616161',
+    fontSize: 18,
+    textAlign: 'center'
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center'
+  },
+  safeArea: {
+    flex: 1,
+    marginTop: -50
   },
   title: {
     color: '#000000',

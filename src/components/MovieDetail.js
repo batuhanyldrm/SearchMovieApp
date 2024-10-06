@@ -1,4 +1,4 @@
-import { ActivityIndicator, Alert, Dimensions, Image, ImageBackground, ScrollView, StatusBar, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { ActivityIndicator, Alert, Dimensions, Image, ScrollView, StatusBar, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
 import * as Icons from "react-native-heroicons/outline";
@@ -70,34 +70,55 @@ export default function MovieDetail({ route }) {
 
   return (
     loading ? 
-      <View style={{flex: 1, justifyContent: 'center'}}>
-        <ActivityIndicator color="#e04403" size="large" />
-        <Text style={{color: '#616161', fontSize: 18, textAlign: 'center'}}>Loading</Text>
+      <View style={styles.loadingContainer}>
+        <ActivityIndicator color="#87ceff" size="large" />
+        <Text style={styles.loading}>Loading</Text>
       </View>
     :
-      <SafeAreaView style={{flex: 1}}>
-        {/* <ImageBackground source={movieInfo.Poster !== 'N/A' ? { uri: movieInfo.Poster } : require('../assets/camera.jpg')} imageStyle={{ opacity: 0.2 }} style={{ flex: 1 }}> */}
-          <StatusBar barStyle={'light-content'} />
-          <View style={styles.container}>
-            <Text style={{ color: '#000000', fontSize: 18, fontWeight: '600', textAlign: 'center' }}>{movieInfo.Title}</Text>
-            <ScrollView contentContainerStyle={styles.scrollContainer}>
-              <View style={{ alignItems: 'center' }}>
-                <Image source={movieInfo.Poster !== 'N/A' ? { uri: movieInfo.Poster } : require('../assets/camera.jpg')} style={styles.image} />
-                <TouchableOpacity onPress={addToFavorite}>
-                  <Icons.HeartIcon color={isFavorite ? "#6495ed" : "#000000"} fill={isFavorite ? "#87ceff" : "#e8e8e8"} size={30} />
-                </TouchableOpacity>
-              </View>
-              <View style={styles.textContainer}>
-                <Text style={styles.textDecoration}><Icons.CalendarIcon color="#000000" fill="#999999" size={15} /> Year: {movieInfo.Released !== 'N/A' ? movieInfo.Released : '-'}</Text>
-                <Text style={styles.textDecoration}><Icons.StarIcon color="#000000" fill="#999999" size={15} /> Rating: {movieInfo.imdbRating !== 'N/A' ? movieInfo.imdbRating : '-'}</Text>
-                <Text style={styles.textDecoration}><Icons.ClockIcon color="#000000" fill="#999999" size={15} /> Time: {movieInfo.Runtime !== 'N/A' ? movieInfo.Runtime : '-'}</Text>
-                <Text style={styles.textDecoration}>Summary</Text>
-                <Text style={styles.textDecoration}>{movieInfo.Plot !== 'N/A' ? movieInfo.Plot : '-'}</Text>
-                <Text style={styles.textDecoration}>Gendre: {movieInfo.Genre !== 'N/A' ? movieInfo.Genre : '-'}</Text>
-              </View>
-            </ScrollView>
-          </View>
-        {/* </ImageBackground> */}
+      <SafeAreaView style={styles.safeArea}>
+        <StatusBar barStyle={'light-content'} />
+        <View style={styles.container}>
+          <Text style={styles.title}>{movieInfo.Title}</Text>
+          <ScrollView contentContainerStyle={styles.scrollContainer}>
+            <View style={styles.imageContainer}>
+              <Image source={movieInfo.Poster !== 'N/A' ? { uri: movieInfo.Poster } : require('../assets/camera.jpg')} style={styles.image} />
+              <TouchableOpacity onPress={addToFavorite}>
+                <Icons.HeartIcon color={isFavorite ? "#6495ed" : "#000000"} fill={isFavorite ? "#87ceff" : "#e8e8e8"} size={30} />
+              </TouchableOpacity>
+            </View>
+            <View style={styles.textContainer}>
+              <Text style={styles.mainTextDecoration}>
+                <Icons.CalendarIcon color="#000000" fill="#999999" size={15} /> 
+                <Text style={styles.textDecoration}> Year: </Text>
+                <Text style={styles.color}>{movieInfo.Released !== 'N/A' ? movieInfo.Released : '-'}</Text>
+              </Text>
+              <Text style={styles.mainTextDecoration}>
+                <Icons.StarIcon color="#000000" fill="#999999" size={15} /> 
+                <Text style={styles.textDecoration}> Rating: </Text>
+                <Text style={styles.color}>{movieInfo.imdbRating !== 'N/A' ? movieInfo.imdbRating : '-'}</Text>
+              </Text>
+              <Text style={styles.mainTextDecoration}>
+                <Icons.ClockIcon color="#000000" fill="#999999" size={15} /> 
+                <Text style={styles.textDecoration}> Time: </Text>
+                <Text style={styles.color}>{movieInfo.Runtime !== 'N/A' ? movieInfo.Runtime : '-'}</Text>
+              </Text>
+              <Text style={styles.mainTextDecoration}>
+                <Text style={styles.textDecoration}>Gendre: </Text>
+                <Text style={styles.color}>{movieInfo.Genre !== 'N/A' ? movieInfo.Genre : '-'}</Text>
+              </Text>
+              <Text style={styles.textDecorationSummary}>Summary:</Text>
+              <Text style={styles.color}>{movieInfo.Plot !== 'N/A' ? movieInfo.Plot : '-'}</Text>
+              <Text style={styles.mainTextDecoration}>
+                <Text style={styles.textDecoration}>Director: </Text>
+                <Text style={styles.color}>{movieInfo.Director !== 'N/A' ? movieInfo.Director : '-'}</Text>
+              </Text>
+              <Text style={styles.mainTextDecoration}>
+                <Text style={styles.textDecoration}>Actors: </Text>
+                <Text style={styles.color}>{movieInfo.Actors !== 'N/A' ? movieInfo.Actors : '-'}</Text>
+              </Text>
+            </View>
+          </ScrollView>
+        </View>
       </SafeAreaView>
   );
 }
@@ -109,20 +130,48 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center'
+  },
+  loading: {
+    color: '#616161',
+    fontSize: 18,
+    textAlign: 'center'
+  },
+  safeArea: {
+    flex: 1
+  },
+  title: {
+    color: '#000000',
+    fontSize: 18,
+    fontWeight: '600',
+    textAlign: 'center'
+  },
+  color: {
+    color: '#000000'
+  },
   scrollContainer: {
     alignItems: 'center',
     paddingVertical: 20,
   },
   textContainer: {
-   /*  flexDirection: 'row',
-    justifyContent: 'space-between', */
     paddingHorizontal: 20,
     width: Dimensions.get('window').width,
+  },
+  mainTextDecoration: {
+    marginVertical: 5
   },
   textDecoration: {
     color: '#000000',
     fontSize: 15,
     fontWeight: '600',
+  },
+  textDecorationSummary: {
+    color: '#000000',
+    fontSize: 15,
+    fontWeight: '600',
+    marginVertical: 5
   },
   image: {
     borderRadius: 10,
@@ -131,4 +180,7 @@ const styles = StyleSheet.create({
     resizeMode: 'cover',
     width: Dimensions.get('window').width / 2.2,
   },
+  imageContainer: {
+    alignItems: 'center'
+  }
 });
