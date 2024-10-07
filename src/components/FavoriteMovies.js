@@ -1,6 +1,6 @@
 import { ActivityIndicator, FlatList, StatusBar, StyleSheet, Text, View, Image, Dimensions, TouchableHighlight } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useState } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
 
