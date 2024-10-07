@@ -13,10 +13,10 @@ export default function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator>
-        <Stack.Screen name="Movies" options={{headerStyle: {backgroundColor: 'gray'}, headerTintColor: 'white',}} component={Main} />
+        <Stack.Screen name="Movies" options={{headerStyle: {backgroundColor: '#828282'}, headerTintColor: 'white',}} component={Main} />
         <Stack.Screen name="Movie" component={Movies} />
-        <Stack.Screen name="Movie Detail" options={{headerStyle: {backgroundColor: 'gray'}, headerTintColor: 'white',}} component={MovieDetail} />
-        <Stack.Screen name="Favorite Movies" options={{headerStyle: {backgroundColor: 'gray'}, headerTintColor: 'white',}} component={FavoriteMovies} />
+        <Stack.Screen name="Movie Detail" options={{headerStyle: {backgroundColor: '#828282'}, headerTintColor: 'white',}} component={MovieDetail} />
+        <Stack.Screen name="Favorite Movies" options={{headerStyle: {backgroundColor: '#828282'}, headerTintColor: 'white',}} component={FavoriteMovies} />
         <Stack.Screen name="SearchBar" component={SearchBar} />
       </Stack.Navigator>
     </NavigationContainer>
