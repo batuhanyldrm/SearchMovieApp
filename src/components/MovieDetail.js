@@ -1,4 +1,4 @@
-import { ActivityIndicator, Alert, Dimensions, Image, ScrollView, StatusBar, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { ActivityIndicator, Alert, Dimensions, Image, ImageBackground, ScrollView, StatusBar, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
 import * as Icons from "react-native-heroicons/outline";
@@ -77,48 +77,50 @@ export default function MovieDetail({ route }) {
     :
       <SafeAreaView style={styles.safeArea} edges={['bottom', 'left', 'right']}>
         <StatusBar barStyle={'light-content'} />
-        <View style={styles.container}>
-          <Text style={styles.title}>{movieInfo.Title}</Text>
-          <ScrollView contentContainerStyle={styles.scrollContainer}>
-            <View style={styles.imageContainer}>
-              <Image source={movieInfo.Poster !== 'N/A' ? { uri: movieInfo.Poster } : require('../assets/camera.jpg')} style={styles.image} />
-              <TouchableOpacity onPress={addToFavorite}>
-                <Icons.HeartIcon color={isFavorite ? "#ff4040" : "#000000"} fill={isFavorite ? "#ff4040" : "#e8e8e8"} size={30} />
-              </TouchableOpacity>
-            </View>
-            <View style={styles.textContainer}>
-              <Text style={styles.mainTextDecoration}>
-                <Icons.CalendarIcon color="#000000" fill="#999999" size={15} /> 
-                <Text style={styles.textDecoration}> Year: </Text>
-                <Text style={styles.color}>{movieInfo.Released !== 'N/A' ? movieInfo.Released : '-'}</Text>
-              </Text>
-              <Text style={styles.mainTextDecoration}>
-                <Icons.StarIcon color="#000000" fill="#999999" size={15} /> 
-                <Text style={styles.textDecoration}> Rating: </Text>
-                <Text style={styles.color}>{movieInfo.imdbRating !== 'N/A' ? movieInfo.imdbRating : '-'}</Text>
-              </Text>
-              <Text style={styles.mainTextDecoration}>
-                <Icons.ClockIcon color="#000000" fill="#999999" size={15} /> 
-                <Text style={styles.textDecoration}> Time: </Text>
-                <Text style={styles.color}>{movieInfo.Runtime !== 'N/A' ? movieInfo.Runtime : '-'}</Text>
-              </Text>
-              <Text style={styles.mainTextDecoration}>
-                <Text style={styles.textDecoration}>Gendre: </Text>
-                <Text style={styles.color}>{movieInfo.Genre !== 'N/A' ? movieInfo.Genre : '-'}</Text>
-              </Text>
-              <Text style={styles.textDecorationSummary}>Summary:</Text>
-              <Text style={styles.color}>{movieInfo.Plot !== 'N/A' ? movieInfo.Plot : '-'}</Text>
-              <Text style={styles.mainTextDecoration}>
-                <Text style={styles.textDecoration}>Director: </Text>
-                <Text style={styles.color}>{movieInfo.Director !== 'N/A' ? movieInfo.Director : '-'}</Text>
-              </Text>
-              <Text style={styles.mainTextDecoration}>
-                <Text style={styles.textDecoration}>Actors: </Text>
-                <Text style={styles.color}>{movieInfo.Actors !== 'N/A' ? movieInfo.Actors : '-'}</Text>
-              </Text>
-            </View>
-          </ScrollView>
-        </View>
+        <ImageBackground source={movieInfo.Poster !== 'N/A' ? { uri: movieInfo.Poster } : require('../assets/camera.jpg')} imageStyle={{opacity:0.1}} style={styles.safeArea}>
+          <View style={styles.container}>
+            <Text style={styles.title}>{movieInfo.Title}</Text>
+            <ScrollView contentContainerStyle={styles.scrollContainer}>
+              <View style={styles.imageContainer}>
+                <Image source={movieInfo.Poster !== 'N/A' ? { uri: movieInfo.Poster } : require('../assets/camera.jpg')} style={styles.image} />
+                <TouchableOpacity onPress={addToFavorite}>
+                  <Icons.HeartIcon color={isFavorite ? "#ff4040" : "#000000"} fill={isFavorite ? "#ff4040" : "#e8e8e8"} size={30} />
+                </TouchableOpacity>
+              </View>
+              <View style={styles.textContainer}>
+                <Text style={styles.mainTextDecoration}>
+                  <Icons.CalendarIcon color="#000000" fill="#999999" size={15} /> 
+                  <Text style={styles.textDecoration}> Year: </Text>
+                  <Text style={styles.color}>{movieInfo.Released !== 'N/A' ? movieInfo.Released : '-'}</Text>
+                </Text>
+                <Text style={styles.mainTextDecoration}>
+                  <Icons.StarIcon color="#000000" fill="#999999" size={15} /> 
+                  <Text style={styles.textDecoration}> Rating: </Text>
+                  <Text style={styles.color}>{movieInfo.imdbRating !== 'N/A' ? movieInfo.imdbRating : '-'}</Text>
+                </Text>
+                <Text style={styles.mainTextDecoration}>
+                  <Icons.ClockIcon color="#000000" fill="#999999" size={15} /> 
+                  <Text style={styles.textDecoration}> Time: </Text>
+                  <Text style={styles.color}>{movieInfo.Runtime !== 'N/A' ? movieInfo.Runtime : '-'}</Text>
+                </Text>
+                <Text style={styles.mainTextDecoration}>
+                  <Text style={styles.textDecoration}>Gendre: </Text>
+                  <Text style={styles.color}>{movieInfo.Genre !== 'N/A' ? movieInfo.Genre : '-'}</Text>
+                </Text>
+                <Text style={styles.textDecorationSummary}>Summary:</Text>
+                <Text style={styles.color}>{movieInfo.Plot !== 'N/A' ? movieInfo.Plot : '-'}</Text>
+                <Text style={styles.mainTextDecoration}>
+                  <Text style={styles.textDecoration}>Director: </Text>
+                  <Text style={styles.color}>{movieInfo.Director !== 'N/A' ? movieInfo.Director : '-'}</Text>
+                </Text>
+                <Text style={styles.mainTextDecoration}>
+                  <Text style={styles.textDecoration}>Actors: </Text>
+                  <Text style={styles.color}>{movieInfo.Actors !== 'N/A' ? movieInfo.Actors : '-'}</Text>
+                </Text>
+              </View>
+            </ScrollView>
+          </View>
+        </ImageBackground>
       </SafeAreaView>
   );
 }

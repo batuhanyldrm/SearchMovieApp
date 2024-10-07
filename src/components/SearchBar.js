@@ -62,16 +62,12 @@ export default function SearchBar(props) {
                 defaultButtonText="Select Year"
                 renderButton={selectedItem => {
                   return (
-                    <View>
-                      <Text>{selectedItem}</Text>
-                    </View>
+                    <View><Text>{selectedItem}</Text></View>
                   );
                 }}
                 renderItem={item => {
                   return (
-                    <View>
-                      <Text>{item.year}</Text>
-                    </View>
+                    <View><Text>{item.year}</Text></View>
                   );
                 }}
                 showsVerticalScrollIndicator={false}
